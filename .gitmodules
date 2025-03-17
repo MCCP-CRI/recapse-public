@@ -1,0 +1,9 @@
+[submodule "prediction"]
+	path = prediction
+	url = git@github.com:MCCP-CRI/recapse-private.git
+[submodule "preprocess"]
+	path = preprocess
+	url = git@github.com:MCCP-CRI/recapse-private.git
+[submodule "sas"]
+	path = sas
+	url = git@github.com:MCCP-CRI/recapse-private.git
