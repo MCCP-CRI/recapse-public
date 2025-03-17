@@ -62,3 +62,9 @@ CPU cores as each Python process can use a separate core. However, debugging inf
 To change to thread-based workers, use the `EXECUTOR_TYPE` environment variable:
 
     docker run -d -e EXECUTOR_TYPE=thread mccp/recapse:latest
+
+
+Access to private submodules
+===
+For access to the preprocess, prediction, and sas submodules containing the code and models used for the XGBoost model, 
+please contact Roger Chui at `roger` at `uky` dot `edu` for access to the private submodule repository.
