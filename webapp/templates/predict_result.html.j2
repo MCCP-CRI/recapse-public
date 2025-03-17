@@ -1,0 +1,59 @@
+{% extends 'base.html.j2' %}
+
+{% block header %}
+    <h1>{% block title %}Prediction{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <h2>Prediction Results for {{ task_name }}</h2>
+    <p>Here are summary statistics from the prediction run.</p>
+    <p><strong>Number of patients:</strong> {{ results['count'] }}</p>
+    <p><strong>Prediction model:</strong> {{ run_options['model'] }}</p>
+    <p><strong>Features used:</strong> {{ run_options['feature_set'] }}</p>
+    <p><strong>Cutoff:</strong> {{ run_options['cutoff'] }}</p>
+    <p><strong>Number of recurrences predicted:</strong> {{ results['recurrences'] }}</p>
+    <h3>By Race</h3>
+    <table>
+        <tr>
+            <th>&nbsp;</th><th>Total</th><th>Recurrences</th>
+        </tr>
+        {% for key in results['by_race'] %}
+        <tr>
+            <th>{{ key }}</th><td>{{ results['by_race'][key][0] }}</td><td>{{ results['by_race'][key][1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h3>By Stage</h3>
+    <table>
+        <tr>
+            <th>&nbsp;</th><th>Total</th><th>Recurrences</th>
+        </tr>
+        {% for key in results['by_stage'] %}
+        <tr>
+            <th>{{ key }}</th><td>{{ results['by_stage'][key][0] }}</td><td>{{ results['by_stage'][key][1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h3>By Diagnosis Year</h3>
+    <table>
+        <tr>
+            <th>&nbsp;</th><th>Total</th><th>Recurrences</th>
+        </tr>
+        {% for key in results['by_year'] %}
+        <tr>
+            <th>{{ key }}</th><td>{{ results['by_year'][key][0] }}</td><td>{{ results['by_year'][key][1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h3>By Age at Diagnosis</h3>
+    <table>
+        <tr>
+            <th>&nbsp;</th><th>Total</th><th>Recurrences</th>
+        </tr>
+        {% for key in results['by_age'] %}
+            <tr>
+                <th>{{ key }}</th><td>{{ results['by_age'][key][0] }}</td><td>{{ results['by_age'][key][1] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

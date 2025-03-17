@@ -1,0 +1,42 @@
+{% extends 'base.html.j2' %}
+
+{% block header %}
+    <h1>{% block title %}Tasks{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <h2>All Tasks</h2>
+    <table style="width: 100%;">
+        <tr>
+            <th>Task ID</th><th>State</th><th>Info</th><th>Actions</th>
+        </tr>
+        {% for ts in task_status %}
+            <tr>
+                <th>{{ ts['task_name'] }}</th>
+                <td>{{ ts['task_status'] }}</td>
+                <td>
+                    {% if ts['task_status'] == 'FINISHED' %}
+                    Task finished successfully.
+                    {% elif ts['task_status'] == 'ERROR' %}
+                    {{ ts['task_message'] }}
+                    {% else %}
+                    Started at {{ ts['task_message'] }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if ts['task_status'] == 'FINISHED' %}
+{#                        {% if ts['task_name'].startswith('prediction') %}#}
+                        <a href="{{ url_for("views.view_task_result", task_name=ts['task_name']) }}">Results Summary</a>
+{#                        {% endif %}#}
+                    <a href="{{ url_for("views.download_task", task_name=ts['task_name']) }}">Download Files</a>
+                    <a href="{{ url_for("views.remove_task", task_name=ts['task_name']) }}">Remove</a>
+                    {% elif ts['task_status'] == 'ERROR' %}
+                    {{ ts['task_message'] }}
+                    {% else %}
+                    &nbsp;
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

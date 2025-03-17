@@ -1,0 +1,81 @@
+{% extends 'base.html.j2' %}
+
+{% block header %}
+    <h1>{% block title %}Preprocessing{% endblock %}</h1>
+    <script>
+    function updateFieldsOnDataTypeChange(f) {
+        const medicareFields = document.getElementsByClassName("medicare");
+        const medicaidFields = document.getElementsByClassName("medicaid");
+        if (f.value === "0") { // both
+            for(let i=0; i<medicareFields.length; i++) {
+                if (medicareFields[i].disabled !== undefined) medicareFields[i].disabled = false;
+            }
+            for(let i=0; i<medicaidFields.length; i++) {
+                if (medicaidFields[i].disabled !== undefined) medicaidFields[i].disabled = false;
+            }
+        }
+        else if (f.value === "1") { // medicare only
+            for(let i=0; i<medicareFields.length; i++) {
+                if (medicareFields[i].disabled !== undefined) medicareFields[i].disabled = false;
+            }
+            for(let i=0; i<medicaidFields.length; i++) {
+                if (medicaidFields[i].disabled !== undefined) medicaidFields[i].disabled = true;
+            }
+        }
+        else if (f.value === "2") { // medicaid/other only
+            for (let i = 0; i < medicareFields.length; i++) {
+                if (medicareFields[i].disabled !== undefined) medicareFields[i].disabled = true;
+            }
+            for (let i = 0; i < medicaidFields.length; i++) {
+                if (medicaidFields[i].disabled !== undefined) medicaidFields[i].disabled = false;
+            }
+        }
+    }
+    </script>
+{% endblock %}
+
+{% block content %}
+  <form method="post" action="{{ url_for("views.submit_preprocess") }}" enctype="multipart/form-data">
+    <h2>Preprocessing options</h2>
+    <label for="user">Job Name:</label>
+    <input name="user" id="user" required />
+    <label for="numdata">Data Type:</label>
+    <select name="numdata" id="numdata" onload="updateFieldsOnDataTypeChange(this)" onchange="updateFieldsOnDataTypeChange(this);">
+      <option value="0">Both</option>
+      <option value="1">Only Medicare</option>
+      <option value="2">Only Medicaid or Other Claims</option>
+    </select>
+    <label for="mld" class="medicaid">Length of Medicaid or Other Insurance Enrollment File (in months):</label>
+    <input name="mld" id="mld" class="medicaid" />
+    <label for="sd" class="medicaid">Start Date for Medicaid/Other Enrollment (YYYY-MM-DD):</label>
+    <input name="sd" id="sd" class="medicaid" />
+    <label for="mle" class="medicare">Length of Medicare Enrollment File (in months):</label>
+    <input name="mle" id="mle" class="medicare" />
+    <label for="se" class="medicare">Start Date for Medicare Enrollment (YYYY-MM-DD):</label>
+    <input name="se" id="se" class="medicare" />
+    <label for="dc">Drug Code:</label>
+    <select name="dc" id="dc">
+      <option value="VAL_2ND">Short GNN drug grouped features</option>
+      <option value="DM3_SPE">DM3 specific drug</option>
+    </select>
+    <label for="metacsv">Registry Incidence Data CSV:</label>
+    <input name="metacsv" id="metacsv" type="file" accept="text/csv" />
+    <label for="mecaidClaims" class="medicaid">Medicaid/Other Claims CSV:</label>
+    <input name="mecaidClaims" id="mecaidClaims" type="file" accept="text/csv" class="medicaid" />
+    <label for="mecaidlaims2" class="medicaid">Medicaid/Other Pharmacy Claims CSV:</label>
+    <input name="mecaidClaims2" id="mecaidlaims2" type="file" accept="text/csv" class="medicaid" />
+    <label for="mecaidEnroll" class="medicaid">Medicaid/Other Enrollment CSV:</label>
+    <input name="mecaidEnroll" id="mecaidEnroll" type="file" accept="text/csv" class="medicaid" />
+    <label for="mecareClaims" class="medicare">Medicare Claims CSV:</label>
+    <input name="mecareClaims" id="mecareClaims" type="file" accept="text/csv" class="medicare" />
+    <label for="mecareEnroll" class="medicare">Medicare Enrollment CSV:</label>
+    <input name="mecareEnroll" id="mecareEnroll" type="file" accept="text/csv" class="medicare" />
+    <input type="submit" value="Upload for Preprocessing" />
+  </form>
+  <script>
+    // call the update function once the page is loaded to make sure the input state matches the form state
+    (function () {
+        updateFieldsOnDataTypeChange(document.getElementById("numdata"));
+    })();
+  </script>
+{% endblock %}

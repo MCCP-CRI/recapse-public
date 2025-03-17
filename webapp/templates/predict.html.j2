@@ -1,0 +1,41 @@
+{% extends 'base.html.j2' %}
+
+{% block header %}
+  <h1>{% block title %}Prediction{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post" action="{{ url_for("views.submit_predict") }}" enctype="multipart/form-data">
+    <h2>Prediction options</h2>
+    <label for="user">Job Name:</label>
+    <input name="user" id="user" required />
+    <label for="inputname">Model Input Features (from Preprocessing 11E output):</label>
+    <input name="inputname" id="inputname" type="file" accept=".pkl" />
+    <label for="chrname">Patient level characteristics XLSX (from step 8 output):</label>
+    <input name="chrname" id="chrname" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+    <label for="fs">Input Feature Sets:</label>
+    <select name="fs" id="fs">
+      <option value="CCSandVAL2nd">Short GNN drug grouped features (file name contains CCSandVAL2nd)</option>
+      <option value="CCSandDM3SPE">DM3 specific drug (file name contains CCSandDM3SPE)</option>
+    </select>
+    <label for="sc">SBCE Definition:</label>
+    <select name="sc" id="sc">
+      <option value="SBCE">Include death related to first primary</option>
+      <option value="SBCE_Excluded_DeathPts">Exclude death related to first primary</option>
+    </select>
+    <label for="model">Model:</label>
+    <select name="model" id="model">
+        <option value="Full_Model">Full Model</option>
+      <option value="TopF_Model">Top Features Model</option>
+    </select>
+    <label for="method">Prediction Output Detail Level:</label>
+    <select name="method" id="method">
+      <option value="1">Only patient-level prediction</option>
+{#      <option value="2">Only month-level prediction (warning: generates a large file)</option>#}
+      <option value="0">Both patient-level and month-level prediction</option>
+    </select>
+    <label for="cutoff">Cutoff (0.1-0.9):</label>
+    <input name="cutoff" id="cutoff" type="number" min="0.1" max="0.9" step="0.1" value="0.5"/>
+    <input type="submit" value="Upload for Prediction" />
+  </form>
+{% endblock %}

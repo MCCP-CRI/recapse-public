@@ -1,0 +1,58 @@
+{% extends 'base.html.j2' %}
+
+{% block header %}
+    <h1>{% block title %}Main{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <h2>User Guide</h2>
+    <p>Recurrence using Claims and PROs for SEER Expansion (RECAPSE) is an XGBoost model for predicting second breast
+        cancer events (recurrence and new breast primary) based on registry cancer incidence data linked with insurance
+        enrollment and claims data.</p>
+    <p>The purpose of this tool is to provide prediction of second breast cancer events and improve the efficiency of
+        registry operation effort to identify recurrences. Registries can utilize the results to manually check these
+        cases for true recurrences. Users can adjust the cut-off value to control the sensitivity and specificity of
+        the results based on their own specific data and resources available.</p>
+    <h2>Preprocessing Data</h2>
+    <p>The first step is to preprocess the data. This is a time-consuming step that generates two files needed for the
+        prediction step:
+        <ol>
+            <li>Incidence File: Contains consolidated patient-level data.</li>
+            <li>Feature File: Contains all the features used as input into the XGBoost prediction.</li>
+        </ol>
+    After the preprocessed data is generated, the two files can be fed through the model to generate predictions.</p>
+    <p>For details on creating the input files and the features required in the input data, see:</p>
+    <ul>
+        <li><a href="{{ url_for('static', filename='recapse_data_processing_guide.docx') }}">Data processing guide</a></li>
+        <li><a href="{{ url_for('static', filename='recapse_input_columns_needed.xlsx') }}">Input data dictionary</a></li>
+    </ul>
+    <p>Preprocessing options</p>
+    <ul>
+        <li>Job Name - A string that will be put in the automatically generated task ID to help you identify the task</li>
+        <li>Data Type - Medicaid/Other only, Medicare only, or both</li>
+        <li>Length of medicaid/other enrollment file in months (not needed for medicare only)</li>
+        <li>Start date of medicaid/other enrollment (not needed for medicare only)</li>
+        <li>Length of medicare enrollment file in months (not needed for medicaid/other only)</li>
+        <li>Start date of medicare enrollment (not needed for medicare/other only)</li>
+        <li>Drug Codes - Defines which drugs in claims data are processed to define generated features. Looks for either
+            Maytansinoid DM3 drugs or valproic acid and related drugs found by a short GNN model.</li>
+    </ul>
+    <p>Files needed for preprocessing</p>
+    <ul>
+        <li>Registry Incidence file</li>
+        <li>Enrollment file (both Medicare and Medicaid/Other)</li>
+        <li>Claims file (both Medicare and Medicaid/Other)</li>
+        <li>Pharmacy claims file (Medicaid/Other only)</li>
+    </ul>
+    <p>Prediction options</p>
+    <ul>
+        <li>Job Name - A string that will be put in the automatically generated task ID to help you identify the task</li>
+        <li>Input feature sets - Should match the drug codes used to preprocess the files being submitted. If preprocessed
+            using short GNN drug grouped features, the default file name will contain "CCSandVAL2nd". If using DM3
+            specific drug features, the default filename from preprocessing will contain "CCSandDM3SPE".</li>
+        <li>SBCE Definition - Include or exclude death related to the first primary as a Second Breast Cancer Event (SBCE)</li>
+        <li>Model Type - Select the full model or limit to a smaller model using only the top features for prediction</li>
+        <li>Prediction Output Detail Level - Level of detail of output. The month level output contains a row for each patient for each month. This file can get very large.</li>
+        <li>Cutoff - The prediction score above which a recurrence signal is detected.</li>
+    </ul>
+{% endblock %}

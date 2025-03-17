@@ -1,0 +1,29 @@
+{% extends 'base.html.j2' %}
+
+{% block header %}
+    <h1>{% block title %}Prediction{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <h2>Preprocessing Results for {{ task_name }}</h2>
+    <p>Here is some information about this preprocessing job.</p>
+    <p><strong>Number of patients:</strong> {{ results['num_patients'] }}</p>
+    <p><strong>Number of patient-months:</strong> {{ results['num_patient_months'] }}</p>
+    <p><strong>Number of features:</strong> {{ results['num_features'] }}</p>
+    {% if run_options['num_data'] == "0" %}
+    <p><strong>Data type: </strong>Both Medicare and Medicaid/Other Insurance</p>
+    <p><strong>Medicare Data: </strong>From {{ run_options['start_medicare'] }}, Length {{ run_options['mon_len_medicare'] }} months</p>
+    <p><strong>Medicaid/Other Insurance Data: </strong>From {{ run_options['start_medicaid'] }}, Length {{ run_options['mon_len_medicaid'] }} months</p>
+    {% elif run_options['num_data'] == "1" %}
+    <p><strong>Data type: </strong>Medicare Only</p>
+    <p>From {{ run_options['start_medicare'] }}, Length {{ run_options['mon_len_medicare'] }} months</p>
+    {% elif run_options['num_data'] == "2" %}
+    <p><strong>Data type: </strong>Medicaid/Other Insurance Only</p>
+    <p>From {{ run_options['start_medicaid'] }}, Length {{ run_options['mon_len_medicaid'] }} months</p>
+    {% endif %}
+    {% if run_options['drug_code'] == "VAL_2ND" %}
+    <p><strong>Drug Features: </strong>Short GNN drug grouped features</p>
+    {% elif run_options['drug_code'] == "DM3_SPE" %}
+    <p><strong>Drug Features: </strong>DM3 Specific Drug</p>
+    {% endif %}
+{% endblock %}
